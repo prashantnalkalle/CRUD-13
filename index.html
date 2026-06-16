@@ -23,7 +23,7 @@
 								
 								<div class="form-group">
 									<label for="userId" class="font-weight-bold">UserId*</label>
-									<select name="select" class="form-control" id="userId">
+									<select name="select" required class="form-control" id="userId">
 										<option value="1">Select</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -39,7 +39,7 @@
 								</div>
 								<div class="form-group">
 									<label for="completed" class="font-weight-bold">Is Completed?*</label>
-									<select class="form-control" id="completed">
+									<select class="form-control" required id="completed">
 										<option value="select">Select</option>
 										<option value="true">Completed</option>
 										<option value="false">Not Completed</option>
@@ -66,13 +66,7 @@
 									</tr>
 								</thead>
 								<tbody id="todocontainer">
-									<!-- <tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td><i class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
-										<td><i class="fa-solid fa-trash fa-2x text-danger" onclick="onremove(this)"></i></td>
-									</tr> -->
+									
 								</tbody>
 							</table>
 
@@ -81,7 +75,7 @@
 				</div>
 			</div>
 			
-			<div class="spinner" id="spinner">
+			<div class="spinner d-none" id="spinner">
 				<div class="spinner-border text-primary" role="status">
   					<span class="sr-only">Loading...</span>
 				</div>

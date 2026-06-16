@@ -7,14 +7,11 @@ const userId = document.getElementById('userId')
 const Addtodo = document.getElementById('Addtodo')
 const Updatetodo = document.getElementById('Updatetodo')
 const todocontainer = document.getElementById('todocontainer')
-
 const spinner = document.getElementById('spinner')
 
 let todoArr =[]
 
 let Base_url ='https://jsonplaceholder.typicode.com/todos'
-
-
 
 function snackbar(msg,icon){
     swal.fire({
@@ -35,11 +32,18 @@ function fetchproducts (){
     xhr.send(null)
 
     xhr.onload = function(){
-        postArr = JSON.parse(xhr.response)
+        if(xhr.status >= 200 && xhr.status <= 299){
+            postArr = JSON.parse(xhr.response)
         
-        createposts(postArr.reverse())
+            createposts(postArr.reverse())
+            
+        }
+       
+        spinner.classList.add('d-none')
         
     }
+
+
 
 }
 
@@ -61,8 +65,8 @@ function createposts(arr){
 					    <td>${arr.length - i}</td>
 						<td>${ele.title}</td>
 						<td>${createicon(ele.completed)}</td>
-						<td><i class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
-						<td><i class="fa-solid fa-trash fa-2x text-danger" onclick="onremove(this)"></i></td>
+						<td><i role='button' class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
+						<td><i role='button' class="fa-solid fa-trash fa-2x text-danger" onclick="onremove(this)"></i></td>
 					</tr>`
     })
 
@@ -70,7 +74,6 @@ function createposts(arr){
     todocontainer.innerHTML =result
 
 
-    spinner.classList.add('d-none')
 }
 
 function onsubmit(ele){
@@ -95,14 +98,12 @@ function onsubmit(ele){
        if(xhr.status >=200 && xhr.status <=299){
          let response =JSON.parse( xhr.response)
 
-        addnewcard(newobj,response)
+            addnewcard(newobj,response)
        }
 
+     spinner.classList.add('d-none')
 
     }
-
-
-
 
 }
 
@@ -115,21 +116,16 @@ function addnewcard(newobj,response){
     tr.innerHTML = `	<td>${todoArr.length}</td>
 						<td>${newobj.title}</td>
 						<td>${createicon(newobj.completed)}</td>
-						<td><i class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
-						<td><i class="fa-solid fa-trash fa-2x text-danger" onclick="onremove(this)"></i></td>
+						<td><i role='button' class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
+						<td><i role='button' class="fa-solid fa-trash fa-2x text-danger" onclick="onremove(this)"></i></td>
 					`
 
 
     todocontainer.prepend(tr)
 
-
     inputform.reset()
-    spinner.classList.add('d-none')
-
 
     snackbar(`The New Todo id ${response.id} is added successfully!!`,'success')
-
-
 }
 
 
@@ -212,56 +208,52 @@ function onupdate(){
 
         snackbar(err,'error')
        }
+
+        spinner.classList.add('d-none')
+
     }
-    spinner.classList.add('d-none')
     
 }
 
 
 function onremove(ele){
     let removeId = ele.closest('tr').id
-    spinner.classList.remove('d-none')
 
     Swal.fire({
-  title: "Are you sure?",
-  text: "You won't be able to revert this!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, delete it!"
-}).then((result) => {
-  if (result.isConfirmed){
-    
-    let Remove_url = `${Base_url}/${removeId}`
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+    if (result.isConfirmed){
+            spinner.classList.remove('d-none')
+            
+            let Remove_url = `${Base_url}/${removeId}`
 
-    let xhr = new XMLHttpRequest()
+            let xhr = new XMLHttpRequest()
 
-    xhr.open('DELETE',Remove_url)
+            xhr.open('DELETE',Remove_url)
 
-    xhr.send(null)
+            xhr.send(null)
 
-    xhr.onload = function(){
+            xhr.onload = function(){
+                if(xhr.status >= 200 && xhr.status <= 299){
+                    ele.closest('tr').remove();
 
-        ele.closest('tr').remove();
+                    snackbar(`The card id ${removeId} is removed Successfully!!!`,'success')
 
-        snackbar(`The card id ${removeId} is removed Successfully!!!`,'success')
+                }
+                spinner.classList.add('d-none')
 
-    }
+            
+            }
 
-
-    spinner.classList.add('d-none')
-    
-  }
-});
-
+        }
+    });
 }
-
-
-
-
-
-
 
 inputform.addEventListener('submit',onsubmit)
 Updatetodo.addEventListener('click',onupdate)
