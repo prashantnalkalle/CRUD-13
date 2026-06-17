@@ -17,7 +17,7 @@ function snackbar(msg,icon){
     swal.fire({
         title : msg,
         icon : icon,
-        timer : 3000
+        timer : 2000
     })
 }
 
@@ -154,6 +154,11 @@ function onedit(ele){
         Addtodo.classList.add('d-none')
         Updatetodo.classList.remove('d-none')
 
+        inputform.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+
        }else{
 
         let err = xhr.response
@@ -203,6 +208,22 @@ function onupdate(){
 
         Addtodo.classList.remove('d-none')
         Updatetodo.classList.add('d-none')
+
+        let row = document.getElementById(updateId)
+
+        row.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        row.classList.add('highlight');
+
+        setTimeout(() => {
+            row.classList.remove('highlight');
+        }, 4000);
+
+
+
        }else{
         let err = xhr.response
 
