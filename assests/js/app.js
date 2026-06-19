@@ -9,7 +9,7 @@ const Updatetodo = document.getElementById('Updatetodo')
 const todocontainer = document.getElementById('todocontainer')
 const spinner = document.getElementById('spinner')
 
-let todoArr =[]
+let postArr =[]
 
 let Base_url ='https://jsonplaceholder.typicode.com/todos'
 
@@ -28,7 +28,7 @@ function fetchproducts (){
     let Post_Url = `${Base_url}`
 
     xhr.open('GET',Post_Url)
-
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.send(null)
 
     xhr.onload = function(){
@@ -91,7 +91,7 @@ function onsubmit(ele){
     let xhr = new XMLHttpRequest()
 
     xhr.open('POST',Base_url)
-
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.send(JSON.stringify(newobj))
 
     xhr.onload = function(){
@@ -99,6 +99,7 @@ function onsubmit(ele){
          let response =JSON.parse( xhr.response)
 
             addnewcard(newobj,response)
+            
        }
 
      spinner.classList.add('d-none')
@@ -113,7 +114,7 @@ function addnewcard(newobj,response){
     tr.id = response.id
 
 
-    tr.innerHTML = `	<td>${todoArr.length}</td>
+    tr.innerHTML = `	<td>${postArr.length +1}</td>
 						<td>${newobj.title}</td>
 						<td>${createicon(newobj.completed)}</td>
 						<td><i role='button' class="fa-regular fa-pen-to-square fa-2x text-success" onclick="onedit(this)" ></i></td>
@@ -123,6 +124,7 @@ function addnewcard(newobj,response){
 
     todocontainer.prepend(tr)
 
+    postArr.push(newobj)
     inputform.reset()
 
     snackbar(`The New Todo id ${response.id} is added successfully!!`,'success')
@@ -139,7 +141,7 @@ function onedit(ele){
     let xhr = new XMLHttpRequest()
 
     xhr.open('GET',Post_url)
-
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.send(null)
 
     xhr.onload = function(){
@@ -158,21 +160,12 @@ function onedit(ele){
             behavior: 'smooth',
             block: 'start'
         });
-
        }else{
-
         let err = xhr.response
-
         snackbar(err,'error')
-
        }
-
         spinner.classList.add('d-none')
-
     }
-
-    
-
 }
 
 
@@ -191,7 +184,7 @@ function onupdate(){
     let xhr = new XMLHttpRequest()
 
     xhr.open('PUT',PUT_url)
-
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.send(JSON.stringify(updateObj))
 
     xhr.onload = function(){
@@ -257,7 +250,7 @@ function onremove(ele){
             let xhr = new XMLHttpRequest()
 
             xhr.open('DELETE',Remove_url)
-
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
             xhr.send(null)
 
             xhr.onload = function(){
@@ -265,6 +258,12 @@ function onremove(ele){
                     ele.closest('tr').remove();
 
                     snackbar(`The card id ${removeId} is removed Successfully!!!`,'success')
+                    postArr.pop()
+
+                    let alltr = [...document.querySelectorAll('#todocontainer tr')]
+                    alltr.forEach((ele,i) =>{
+                        ele.firstElementChild.innerHTML = postArr.length-i
+                    })
 
                 }
                 spinner.classList.add('d-none')
